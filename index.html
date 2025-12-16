@@ -1,86 +1,99 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logic Gates - Prof. Jeiverson</title>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Logic Gates - Prof. Jeiverson</title>
+    
     <style>
-        /* --- ESTILO GERAL (CSS) --- */
+        /* =========================================
+           ESTILO GERAL (CSS)
+           Aqui definimos a aparência do site
+           ========================================= */
+
+        /* :root guarda as "variáveis" de cores. 
+           Se mudar uma cor aqui, muda no site todo! */
         :root {
-            --bg-color: #1a1a2e;
-            --card-color: #16213e;
-            --accent-color: #0f3460;
-            --text-color: #45e960;
-            --wire-off: #555;
-            --wire-on: #00ffcc; /* Ciano Neon */
-            --lamp-off: #333;
-            --lamp-on: #f1c40f; /* Amarelo Lâmpada */
-            --formula-color: #fff;
+            --bg-color: #1a1a2e;       /* Cor de fundo escura */
+            --card-color: #16213e;     /* Cor dos cartões/caixas */
+            --accent-color: #0f3460;   /* Cor de destaque */
+            --text-color: #45e960;     /* Cor verde dos textos */
+            --wire-off: #555;          /* Cor do fio desligado (cinza) */
+            --wire-on: #00ffcc;        /* Cor do fio ligado (Ciano Neon) */
+            --lamp-off: #333;          /* Cor da lâmpada apagada */
+            --lamp-on: #f1c40f;        /* Cor da lâmpada acesa (Amarelo) */
+            --formula-color: #fff;     /* Cor das fórmulas */
         }
 
+        /* Configuração do corpo da página */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fontes bonitas */
             background-color: var(--bg-color);
             color: white;
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            text-align: center;
+            display: flex;             /* Usa Flexbox para alinhar as coisas */
+            flex-direction: column;    /* Coloca os elementos um embaixo do outro */
+            min-height: 100vh;         /* Ocupa pelo menos 100% da altura da tela */
+            text-align: center;        /* Centraliza o texto */
         }
 
-        /* --- NAVEGAÇÃO E PÁGINAS --- */
+        /* --- CONFIGURAÇÃO DAS PÁGINAS (SPA) --- */
+        
+        /* Por padrão, todas as páginas ficam escondidas (display: none) */
         .page {
             display: none;
             padding: 20px;
-            animation: fadeIn 0.5s;
+            animation: fadeIn 0.5s;    /* Adiciona animação ao aparecer */
             max-width: 100%;
             box-sizing: border-box;
         }
 
+        /* Apenas a página que tiver a classe 'active' vai aparecer */
         .page.active {
             display: block;
         }
 
+        /* Definição da animação de entrada (suave de baixo para cima) */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- PÁGINA PRINCIPAL --- */
+        /* --- ESTILOS DO MENU PRINCIPAL --- */
         .menu-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
+            flex-wrap: wrap;           /* Permite quebrar linha se não couber */
+            justify-content: center;   /* Centraliza os botões */
+            gap: 15px;                 /* Espaço entre os botões */
             max-width: 800px;
-            margin: 0 auto;
+            margin: 0 auto;            /* Centraliza a caixa na tela */
         }
 
+        /* Estilo dos botões do menu */
         .menu-btn {
             background-color: var(--card-color);
             border: 2px solid var(--text-color);
             color: white;
             padding: 15px 30px;
             font-size: 1.1rem;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: 0.3s;
+            cursor: pointer;           /* O mouse vira uma mãozinha */
+            border-radius: 10px;       /* Bordas arredondadas */
+            transition: 0.3s;          /* Suaviza a mudança de cor */
             min-width: 180px;
-            flex: 1 1 200px; /* Responsivo: cresce e encolhe */
+            flex: 1 1 200px;           /* Faz o botão crescer e encolher */
         }
 
+        /* Efeito quando passa o mouse em cima do botão */
         .menu-btn:hover {
             background-color: var(--text-color);
-            transform: scale(1.05);
+            transform: scale(1.05);    /* Aumenta levemente o botão */
         }
 
+        /* Link para o YouTube */
         .youtube-link {
             display: inline-block;
             margin-top: 30px;
             color: #ff0000;
             font-size: 1.2rem;
-            text-decoration: none;
+            text-decoration: none;     /* Tira o sublinhado */
             border: 1px solid #ff0000;
             padding: 10px 20px;
             border-radius: 5px;
@@ -92,22 +105,22 @@
             color: white;
         }
 
-        /* --- FÓRMULAS LÓGICAS --- */
+        /* --- ESTILO DAS FÓRMULAS (p ^ q) --- */
         .formula {
             font-size: 2.5rem;
             color: var(--wire-on);
             margin-bottom: 10px;
             font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+            font-family: 'Courier New', Courier, monospace; /* Fonte estilo máquina de escrever */
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);   /* Brilho neon */
         }
 
-        /* --- ÁREA DO CIRCUITO (RESPONSIVA) --- */
+        /* --- ÁREA DO CIRCUITO (A CAIXA AZUL) --- */
         .circuit-wrapper {
             width: 100%;
             display: flex;
             justify-content: center;
-            overflow: hidden; /* Evita barra de rolagem se escalar */
+            overflow: hidden; /* Corta o que passar do tamanho da tela */
         }
 
         .circuit-board {
@@ -115,38 +128,38 @@
             border-radius: 15px;
             padding: 40px;
             margin: 10px;
-            width: 850px; /* Largura base */
-            max-width: 95vw;
+            width: 850px;              /* Largura padrão */
+            max-width: 95vw;           /* Não deixa passar de 95% da tela */
             height: 250px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            /* Mágica da Responsividade para manter alinhamento Fio/Botão */
-            transform-origin: center top;
+            position: relative;        /* Necessário para posicionar os filhos com 'absolute' */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); /* Sombra em volta */
+            transform-origin: center top; /* Ponto de referência para o zoom (scale) */
         }
 
-        /* Botões de Entrada (P e Q) */
+        /* Container dos Botões de Entrada (P e Q) */
         .inputs {
             display: flex;
-            flex-direction: column;
-            gap: 60px;
-            z-index: 2;
+            flex-direction: column;    /* Um embaixo do outro */
+            gap: 60px;                 /* Distância entre os botões */
+            z-index: 2;                /* Fica na frente dos fios */
             position: absolute;
-            left: 30px; /* Posição fixa relativa ao board */
+            left: 30px;                /* Posição fixa à esquerda */
             top: 60px;
         }
 
-        /* Ajuste específico para quando só tem 1 botão (Negação) */
+        /* Ajuste especial para a porta NÃO (que só tem 1 botão) */
         .inputs.single {
             top: 120px;
         }
 
+        /* Estilo visual do Botão Redondo (Switch) */
         .switch {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 50%;        /* Deixa 100% redondo */
             border: 3px solid #fff;
             background-color: #333;
             color: white;
@@ -158,12 +171,12 @@
             align-items: center;
             justify-content: center;
             transition: 0.3s;
-            position: relative; /* Para rótulo */
+            position: relative;
         }
 
-        /* Rótulo p/q acima do botão para clareza */
+        /* Rótulo (letrinha p ou q) acima do botão */
         .switch::before {
-            content: attr(data-label);
+            content: attr(data-label); /* Pega o texto do atributo HTML */
             position: absolute;
             top: -25px;
             left: 50%;
@@ -172,14 +185,15 @@
             color: #aaa;
         }
 
+        /* Estilo do botão quando está LIGADO (classe .on) */
         .switch.on {
-            background-color: var(--wire-on);
+            background-color: var(--wire-on); /* Fica azul neon */
             color: #000;
-            box-shadow: 0 0 15px var(--wire-on);
+            box-shadow: 0 0 15px var(--wire-on); /* Brilho */
             border-color: var(--wire-on);
         }
 
-        /* Lâmpada de Saída */
+        /* Posição da Lâmpada de Saída */
         .output {
             z-index: 2;
             position: absolute;
@@ -187,39 +201,45 @@
             top: 85px;
         }
 
+        /* Estilo da Lâmpada (apagada) */
         .lamp {
             width: 70px;
             height: 70px;
             border-radius: 50%;
             background-color: var(--lamp-off);
             border: 4px solid #555;
-            box-shadow: inset 0 0 20px #000;
+            box-shadow: inset 0 0 20px #000; /* Sombra interna para parecer vidro */
             transition: 0.3s;
         }
 
+        /* Estilo da Lâmpada (ACESA - classe .on) */
         .lamp.on {
-            background-color: var(--lamp-on);
-            box-shadow: 0 0 30px var(--lamp-on), inset 0 0 10px #fff;
+            background-color: var(--lamp-on); /* Fica amarela */
+            box-shadow: 0 0 30px var(--lamp-on), inset 0 0 10px #fff; /* Brilho forte */
             border-color: #fff;
         }
 
-        /* SVG */
+        /* Configuração do SVG (Desenho dos fios) */
         .wires-svg {
             position: absolute;
-            top: -15px;
+            top: -15px;                /* Ajuste fino para alinhar com os botões */
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            z-index: 1;                /* Fica atrás dos botões */
+            pointer-events: none;      /* Permite clicar nos botões através do desenho */
         }
 
+        /* Estilo das linhas dos fios */
         .wire { fill: none; stroke: var(--wire-off); stroke-width: 4; transition: stroke 0.3s; }
+        /* Estilo do fio quando passa energia */
         .wire.active { stroke: var(--wire-on); filter: drop-shadow(0 0 5px var(--wire-on)); }
         
+        /* Estilo do corpo das portas lógicas (o desenho cinza escuro) */
         .gate-body { fill: #333; stroke: white; stroke-width: 2; }
         .gate-symbol { fill: white; font-size: 24px; font-family: monospace; text-anchor: middle; dominant-baseline: middle; }
 
+        /* Botão de Voltar */
         .btn-back {
             margin-top: 20px;
             padding: 10px 20px;
@@ -233,78 +253,78 @@
         .btn-back:hover { background: white; color: black; }
 
         footer {
-            margin-top: auto;
+            margin-top: auto;          /* Empurra o rodapé para o final da página */
             padding: 20px;
             background-color: #111;
             font-size: 0.9rem;
             color: #888;
         }
 
-        /* --- RESPONSIVIDADE AVANÇADA --- */
-        /* Celulares e Tablets em pé (Menor que 750px) */
+        /* --- RESPONSIVIDADE (AJUSTES PARA CELULAR) --- */
+        
+        /* Regras para Celulares e Tablets (Telas menores que 750px) */
         @media (max-width: 750px) {
             .circuit-board {
-                width: 600px;      /* Largura reduzida */
-                height: 215px;     /* Altura reduzida proporcionalmente */
+                width: 600px;      /* Diminui a largura da placa */
+                height: 215px;     /* Diminui a altura */
                 margin-bottom: 20px;
                 margin-left: auto; 
                 margin-right: auto;
             }
             
-            /* Reduz levemente botões e lâmpada (85% do tamanho original) */
+            /* Diminui o tamanho dos botões e da lâmpada (65% do original) */
             .switch, .lamp {
                 transform: scale(0.65); 
             }
             
-            /* Afina um pouco o fio */
+            /* Deixa o fio um pouco mais fino */
             .wire { stroke-width: 3; }
             
             .formula { font-size: 2rem; }
         }
 
-        /* Celulares Pequenos (Menor que 500px) */
+        /* Regras para Celulares Pequenos (Telas menores que 500px) */
         @media (max-width: 500px) {
             .circuit-board {
-                width: 350px;      /* Quadro bem mais estreito */
-                height: 130px;     /* Altura bem menor para não sobrar espaço */
+                width: 350px;      /* Placa bem estreita */
+                height: 130px;     /* Altura bem pequena */
                 margin-bottom: 20px;
-                padding: 20px;     /* Menos borda interna */
+                padding: 20px;
                 margin-left: auto;
                 margin-right: auto;
             }
 
-            /* Reduz drasticamente os componentes (60% do tamanho) */
+            /* Diminui drasticamente os componentes (40% do original) */
             .switch {
                 transform: scale(0.4);
-                /* Como o scale reduz para o centro, ajustamos a margem para encostar no fio */
-                margin-left: -10px; 
+                margin-left: -10px; /* Ajusta a margem para não ficar longe do fio */
             }
 
             .lamp {
                 transform: scale(0.4);
-                margin-right: -10px; /* Puxa um pouco para a direita */
+                margin-right: -10px; /* Ajusta para a direita */
             }
 
-            /* Fio bem fininho */
-            .wire { stroke-width: 2; }
+            .wire { stroke-width: 2; } /* Fio bem fino */
             
-            /* Ajuste das posições para compensar o tamanho do quadro */
+            /* Reposiciona os botões de entrada para alinhar com o fio */
             .inputs {
-                top: 35px; /* Sobe os botões */
-                left: -5px; /* Puxa para a esquerda */
-                gap: 5px; /* Aproxima um botão do outro verticalmente */
+                top: 35px;
+                left: -5px;
+                gap: 5px;
             }
 
             .inputs.single {
-                top: 75px; /* Ajuste específico para a porta NÃO */
+                top: 75px;
             }
 
+            /* Reposiciona a lâmpada */
             .output {
-                top: 45px; /* Sobe a lâmpada */
+                top: 45px;
                 right: -5px;
             }
             
-            /* Ajuste o SVG para subir junto (alinhar fios com botões) */
+            /* Ajusta o desenho SVG */
             .wires-svg {
                 top: 2.5px;
             }
@@ -329,7 +349,7 @@
             <button class="menu-btn" onclick="goTo('page-nao')">NÃO</button>
         </div>
 
-        <a href="https://youtube.com/seucanal" target="_blank" class="youtube-link">
+        <a href="https://www.youtube.com/watch?v=kOuvHqRbvwY" target="_blank" class="youtube-link">
             ▶ Assistir Videoaula Explicativa
         </a>
     </div>
@@ -341,16 +361,19 @@
         
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="AND">
+                
                 <div class="inputs">
                     <button class="switch" onclick="toggleSwitch(this)">p</button>
                     <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
+
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 250,85" class="wire wire-p" />
                     <path d="M 80,145 L 250,145" class="wire wire-q" />
                     <path d="M 250,50 L 350,50 C 420,50 420,180 350,180 L 250,180 Z" class="gate-body" />
                     <path d="M 400,115 L 590,115" class="wire wire-out" />
                 </svg>
+
                 <div class="output"><div class="lamp"></div></div>
             </div>
         </div>
@@ -479,57 +502,76 @@
     </footer>
 
     <script>
+        // Função para navegar entre "páginas"
         function goTo(pageId) {
+            // 1. Remove a classe 'active' de todas as páginas (esconde tudo)
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
+            // 2. Adiciona 'active' só na página que clicamos
             document.getElementById(pageId).classList.add('active');
             
-            // Reseta botões
+            // 3. Reseta (desliga) todos os botões para começar do zero
             document.querySelectorAll('.switch').forEach(btn => {
                 btn.classList.remove('on');
             });
+            
+            // 4. Atualiza o circuito
             updateAllCircuits();
-            window.scrollTo(0,0); // Rola para o topo no celular
+            // 5. Rola para o topo (útil no celular)
+            window.scrollTo(0,0); 
         }
 
+        // Função chamada quando clica num botão (Switch)
         function toggleSwitch(element) {
+            // Liga ou desliga a classe visual 'on'
             element.classList.toggle('on');
+            // Recalcula a lógica
             updateAllCircuits();
         }
 
+        // A FUNÇÃO PRINCIPAL: Calcula a lógica de todos os circuitos
         function updateAllCircuits() {
+            // Para cada placa de circuito (circuit-board) que existe...
             document.querySelectorAll('.circuit-board').forEach(board => {
-                const logicType = board.getAttribute('data-logic');
-                const switches = board.querySelectorAll('.switch');
-                const lamp = board.querySelector('.lamp');
+                const logicType = board.getAttribute('data-logic'); // Qual porta é? (AND, OR...)
+                const switches = board.querySelectorAll('.switch'); // Pega os botões
+                const lamp = board.querySelector('.lamp'); // Pega a lâmpada
                 
+                // Verifica se o botão P está ligado (true/false)
                 let p = switches[0].classList.contains('on');
+                // Verifica se o botão Q está ligado (se existir)
                 let q = switches.length > 1 ? switches[1].classList.contains('on') : false;
 
-                // Atualiza cor dos fios
+                // --- ATUALIZA A COR DOS FIOS ---
                 const wireP = board.querySelector('.wire-p');
                 const wireQ = board.querySelector('.wire-q');
                 const wireOut = board.querySelector('.wire-out');
 
+                // Se P está ligado, acende o fio P
                 if(wireP) wireP.classList.toggle('active', p);
+                // Se Q está ligado, acende o fio Q
                 if(wireQ) wireQ.classList.toggle('active', q);
 
+                // --- CÁLCULO DA LÓGICA ---
                 let result = false;
 
                 switch(logicType) {
-                    case 'AND': result = p && q; break;
-                    case 'OR':  result = p || q; break;
-                    case 'XOR': result = (p && !q) || (!p && q); break; 
-                    case 'COND': result = !p || q; break; 
-                    case 'BICOND': result = p === q; break; 
-                    case 'NOT': result = !p; break;
+                    case 'AND': result = p && q; break;                 // E: Precisa dos dois
+                    case 'OR':  result = p || q; break;                 // OU: Precisa de um
+                    case 'XOR': result = (p && !q) || (!p && q); break; // OU EXCLUSIVO: Um ou outro
+                    case 'COND': result = !p || q; break;               // SE ENTÃO: Vera Fischer (V->F = F)
+                    case 'BICOND': result = p === q; break;             // BICONDICIONAL: Iguais
+                    case 'NOT': result = !p; break;                     // NÃO: Inverte
                 }
 
+                // --- ATUALIZA A LÂMPADA E FIO DE SAÍDA ---
                 if (result) {
+                    // Se o resultado for VERDADEIRO
                     lamp.classList.add('on');
                     if(wireOut) wireOut.classList.add('active');
                 } else {
+                    // Se o resultado for FALSO
                     lamp.classList.remove('on');
                     if(wireOut) wireOut.classList.remove('active');
                 }
