@@ -10,7 +10,7 @@
             --bg-color: #1a1a2e;
             --card-color: #16213e;
             --accent-color: #0f3460;
-            --text-color: #e94560;
+            --text-color: #45e960;
             --wire-off: #555;
             --wire-on: #00ffcc; /* Ciano Neon */
             --lamp-off: #333;
@@ -282,21 +282,20 @@
     </div>
 
     <div id="page-e" class="page">
-        <h1>PORTA E</h1>
+        <h1>E</h1>
         <h3>Conjunção</h3>
         <div class="formula">p ∧ q</div>
         
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="AND">
                 <div class="inputs">
-                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
-                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                    <button class="switch" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 250,85" class="wire wire-p" />
                     <path d="M 80,145 L 250,145" class="wire wire-q" />
                     <path d="M 250,50 L 350,50 C 420,50 420,180 350,180 L 250,180 Z" class="gate-body" />
-                    <text x="310" y="115" class="gate-symbol">&</text>
                     <path d="M 400,115 L 590,115" class="wire wire-out" />
                 </svg>
                 <div class="output"><div class="lamp"></div></div>
@@ -306,21 +305,20 @@
     </div>
 
     <div id="page-ou" class="page">
-        <h1>PORTA OU</h1>
+        <h1>OU</h1>
         <h3>Disjunção Inclusiva</h3>
         <div class="formula">p ∨ q</div>
         
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="OR">
                 <div class="inputs">
-                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
-                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                    <button class="switch" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 250,85" class="wire wire-p" />
                     <path d="M 80,145 L 250,145" class="wire wire-q" />
                     <path d="M 250,50 Q 300,115 250,180 Q 450,180 450,115 Q 450,50 250,50" class="gate-body" />
-                    <text x="320" y="115" class="gate-symbol">≥1</text>
                     <path d="M 450,115 L 590,115" class="wire wire-out" />
                 </svg>
                 <div class="output"><div class="lamp"></div></div>
@@ -337,15 +335,14 @@
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="XOR">
                 <div class="inputs">
-                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
-                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                    <button class="switch"onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 240,85" class="wire wire-p" />
                     <path d="M 80,145 L 240,145" class="wire wire-q" />
                     <path d="M 235,50 Q 285,115 235,180" fill="none" stroke="white" stroke-width="2" />
                     <path d="M 250,50 Q 300,115 250,180 Q 450,180 450,115 Q 450,50 250,50" class="gate-body" />
-                    <text x="330" y="115" class="gate-symbol">=1</text>
                     <path d="M 450,115 L 590,115" class="wire wire-out" />
                 </svg>
                 <div class="output"><div class="lamp"></div></div>
@@ -362,8 +359,8 @@
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="COND">
                 <div class="inputs">
-                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
-                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                    <button class="switch" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 250,85" class="wire wire-p" />
@@ -386,8 +383,8 @@
         <div class="circuit-wrapper">
             <div class="circuit-board" data-logic="BICOND">
                 <div class="inputs">
-                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
-                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                    <button class="switch" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" onclick="toggleSwitch(this)">q</button>
                 </div>
                 <svg class="wires-svg" viewBox="0 0 700 250">
                     <path d="M 80,85 L 250,85" class="wire wire-p" />
