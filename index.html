@@ -115,7 +115,7 @@
             border-radius: 15px;
             padding: 40px;
             margin: 10px;
-            width: 700px; /* Largura base */
+            width: 850px; /* Largura base */
             max-width: 95vw;
             height: 250px;
             display: flex;
@@ -241,22 +241,75 @@
         }
 
         /* --- RESPONSIVIDADE AVANÇADA --- */
+        /* Celulares e Tablets em pé (Menor que 750px) */
         @media (max-width: 750px) {
-            /* Se a tela for menor que o desenho, escala o desenho para caber */
             .circuit-board {
-                transform: scale(0.8);
-                margin-bottom: -50px; /* Compensa o espaço vazio da escala */
+                width: 600px;      /* Largura reduzida */
+                height: 215px;     /* Altura reduzida proporcionalmente */
+                margin-bottom: 20px;
+                margin-left: auto; 
+                margin-right: auto;
             }
+            
+            /* Reduz levemente botões e lâmpada (85% do tamanho original) */
+            .switch, .lamp {
+                transform: scale(0.65); 
+            }
+            
+            /* Afina um pouco o fio */
+            .wire { stroke-width: 3; }
+            
             .formula { font-size: 2rem; }
         }
 
+        /* Celulares Pequenos (Menor que 500px) */
         @media (max-width: 500px) {
             .circuit-board {
-                transform: scale(0.55);
-                margin-bottom: -100px;
-                margin-left: -10px; /* Centraliza visualmente */
+                width: 350px;      /* Quadro bem mais estreito */
+                height: 130px;     /* Altura bem menor para não sobrar espaço */
+                margin-bottom: 20px;
+                padding: 20px;     /* Menos borda interna */
+                margin-left: auto;
+                margin-right: auto;
             }
-            .formula { font-size: 1.8rem; }
+
+            /* Reduz drasticamente os componentes (60% do tamanho) */
+            .switch {
+                transform: scale(0.4);
+                /* Como o scale reduz para o centro, ajustamos a margem para encostar no fio */
+                margin-left: -10px; 
+            }
+
+            .lamp {
+                transform: scale(0.4);
+                margin-right: -10px; /* Puxa um pouco para a direita */
+            }
+
+            /* Fio bem fininho */
+            .wire { stroke-width: 2; }
+            
+            /* Ajuste das posições para compensar o tamanho do quadro */
+            .inputs {
+                top: 35px; /* Sobe os botões */
+                left: -5px; /* Puxa para a esquerda */
+                gap: 5px; /* Aproxima um botão do outro verticalmente */
+            }
+
+            .inputs.single {
+                top: 75px; /* Ajuste específico para a porta NÃO */
+            }
+
+            .output {
+                top: 45px; /* Sobe a lâmpada */
+                right: -5px;
+            }
+            
+            /* Ajuste o SVG para subir junto (alinhar fios com botões) */
+            .wires-svg {
+                top: 2.5px;
+            }
+
+            .formula { font-size: 1.5rem; }
             h1 { font-size: 1.5rem; }
         }
     </style>
