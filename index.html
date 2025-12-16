@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gates - Prof. Jeiverson</title>
+    <style>
+        /* --- ESTILO GERAL (CSS) --- */
+        :root {
+            --bg-color: #1a1a2e;
+            --card-color: #16213e;
+            --accent-color: #0f3460;
+            --text-color: #e94560;
+            --wire-off: #555;
+            --wire-on: #00ffcc; /* Ciano Neon */
+            --lamp-off: #333;
+            --lamp-on: #f1c40f; /* Amarelo Lâmpada */
+            --formula-color: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* --- NAVEGAÇÃO E PÁGINAS --- */
+        .page {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.5s;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- PÁGINA PRINCIPAL --- */
+        .menu-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .menu-btn {
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.3s;
+            min-width: 180px;
+            flex: 1 1 200px; /* Responsivo: cresce e encolhe */
+        }
+
+        .menu-btn:hover {
+            background-color: var(--text-color);
+            transform: scale(1.05);
+        }
+
+        .youtube-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #ff0000;
+            font-size: 1.2rem;
+            text-decoration: none;
+            border: 1px solid #ff0000;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        
+        .youtube-link:hover {
+            background-color: #ff0000;
+            color: white;
+        }
+
+        /* --- FÓRMULAS LÓGICAS --- */
+        .formula {
+            font-size: 2.5rem;
+            color: var(--wire-on);
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        /* --- ÁREA DO CIRCUITO (RESPONSIVA) --- */
+        .circuit-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden; /* Evita barra de rolagem se escalar */
+        }
+
+        .circuit-board {
+            background-color: var(--card-color);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 10px;
+            width: 700px; /* Largura base */
+            max-width: 95vw;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            /* Mágica da Responsividade para manter alinhamento Fio/Botão */
+            transform-origin: center top;
+        }
+
+        /* Botões de Entrada (P e Q) */
+        .inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+            z-index: 2;
+            position: absolute;
+            left: 30px; /* Posição fixa relativa ao board */
+            top: 60px;
+        }
+
+        /* Ajuste específico para quando só tem 1 botão (Negação) */
+        .inputs.single {
+            top: 120px;
+        }
+
+        .switch {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            background-color: #333;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            position: relative; /* Para rótulo */
+        }
+
+        /* Rótulo p/q acima do botão para clareza */
+        .switch::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: #aaa;
+        }
+
+        .switch.on {
+            background-color: var(--wire-on);
+            color: #000;
+            box-shadow: 0 0 15px var(--wire-on);
+            border-color: var(--wire-on);
+        }
+
+        /* Lâmpada de Saída */
+        .output {
+            z-index: 2;
+            position: absolute;
+            right: 40px;
+            top: 85px;
+        }
+
+        .lamp {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: var(--lamp-off);
+            border: 4px solid #555;
+            box-shadow: inset 0 0 20px #000;
+            transition: 0.3s;
+        }
+
+        .lamp.on {
+            background-color: var(--lamp-on);
+            box-shadow: 0 0 30px var(--lamp-on), inset 0 0 10px #fff;
+            border-color: #fff;
+        }
+
+        /* SVG */
+        .wires-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .wire { fill: none; stroke: var(--wire-off); stroke-width: 4; transition: stroke 0.3s; }
+        .wire.active { stroke: var(--wire-on); filter: drop-shadow(0 0 5px var(--wire-on)); }
+        
+        .gate-body { fill: #333; stroke: white; stroke-width: 2; }
+        .gate-symbol { fill: white; font-size: 24px; font-family: monospace; text-anchor: middle; dominant-baseline: middle; }
+
+        .btn-back {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .btn-back:hover { background: white; color: black; }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            background-color: #111;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* --- RESPONSIVIDADE AVANÇADA --- */
+        @media (max-width: 750px) {
+            /* Se a tela for menor que o desenho, escala o desenho para caber */
+            .circuit-board {
+                transform: scale(0.8);
+                margin-bottom: -50px; /* Compensa o espaço vazio da escala */
+            }
+            .formula { font-size: 2rem; }
+        }
+
+        @media (max-width: 500px) {
+            .circuit-board {
+                transform: scale(0.55);
+                margin-bottom: -100px;
+                margin-left: -10px; /* Centraliza visualmente */
+            }
+            .formula { font-size: 1.8rem; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="home" class="page active">
+        <h1 style="font-size: 2.5rem; color: var(--text-color);">LOGIC GATES</h1>
+        <p>Escolha uma porta lógica para simular:</p>
+        
+        <div class="menu-container">
+            <button class="menu-btn" onclick="goTo('page-e')">E</button>
+            <button class="menu-btn" onclick="goTo('page-ou')">OU</button>
+            <button class="menu-btn" onclick="goTo('page-xor')">OU EXCLUSIVO</button>
+            <button class="menu-btn" onclick="goTo('page-se-entao')">SE ENTÃO</button>
+            <button class="menu-btn" onclick="goTo('page-se-somente')">SE E SOMENTE SE</button>
+            <button class="menu-btn" onclick="goTo('page-nao')">NÃO</button>
+        </div>
+
+        <a href="https://youtube.com/seucanal" target="_blank" class="youtube-link">
+            ▶ Assistir Videoaula Explicativa
+        </a>
+    </div>
+
+    <div id="page-e" class="page">
+        <h1>PORTA E</h1>
+        <h3>Conjunção</h3>
+        <div class="formula">p ∧ q</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="AND">
+                <div class="inputs">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,85 L 250,85" class="wire wire-p" />
+                    <path d="M 80,145 L 250,145" class="wire wire-q" />
+                    <path d="M 250,50 L 350,50 C 420,50 420,180 350,180 L 250,180 Z" class="gate-body" />
+                    <text x="310" y="115" class="gate-symbol">&</text>
+                    <path d="M 400,115 L 590,115" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <div id="page-ou" class="page">
+        <h1>PORTA OU</h1>
+        <h3>Disjunção Inclusiva</h3>
+        <div class="formula">p ∨ q</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="OR">
+                <div class="inputs">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,85 L 250,85" class="wire wire-p" />
+                    <path d="M 80,145 L 250,145" class="wire wire-q" />
+                    <path d="M 250,50 Q 300,115 250,180 Q 450,180 450,115 Q 450,50 250,50" class="gate-body" />
+                    <text x="320" y="115" class="gate-symbol">≥1</text>
+                    <path d="M 450,115 L 590,115" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <div id="page-xor" class="page">
+        <h1>PORTA OU EXCLUSIVO</h1>
+        <h3>Disjunção Exclusiva</h3>
+        <div class="formula">p <span style="text-decoration: underline;">∨</span> q</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="XOR">
+                <div class="inputs">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,85 L 240,85" class="wire wire-p" />
+                    <path d="M 80,145 L 240,145" class="wire wire-q" />
+                    <path d="M 235,50 Q 285,115 235,180" fill="none" stroke="white" stroke-width="2" />
+                    <path d="M 250,50 Q 300,115 250,180 Q 450,180 450,115 Q 450,50 250,50" class="gate-body" />
+                    <text x="330" y="115" class="gate-symbol">=1</text>
+                    <path d="M 450,115 L 590,115" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <div id="page-se-entao" class="page">
+        <h1>PORTA SE... ENTÃO</h1>
+        <h3>Condicional</h3>
+        <div class="formula">p → q</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="COND">
+                <div class="inputs">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,85 L 250,85" class="wire wire-p" />
+                    <path d="M 80,145 L 250,145" class="wire wire-q" />
+                    <rect x="250" y="60" width="150" height="110" rx="10" class="gate-body" />
+                    <text x="325" y="115" class="gate-symbol" style="font-size: 40px;">→</text>
+                    <path d="M 400,115 L 590,115" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <div id="page-se-somente" class="page">
+        <h1>SE E SOMENTE SE</h1>
+        <h3>Bicondicional</h3>
+        <div class="formula">p ↔ q</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="BICOND">
+                <div class="inputs">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                    <button class="switch" data-label="q" onclick="toggleSwitch(this)">q</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,85 L 250,85" class="wire wire-p" />
+                    <path d="M 80,145 L 250,145" class="wire wire-q" />
+                    <rect x="250" y="60" width="150" height="110" rx="10" class="gate-body" />
+                    <text x="325" y="115" class="gate-symbol" style="font-size: 40px;">↔</text>
+                    <path d="M 400,115 L 590,115" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <div id="page-nao" class="page">
+        <h1>PORTA NÃO</h1>
+        <h3>Negação</h3>
+        <div class="formula">~ p</div>
+        
+        <div class="circuit-wrapper">
+            <div class="circuit-board" data-logic="NOT">
+                <div class="inputs single">
+                    <button class="switch" data-label="p" onclick="toggleSwitch(this)">p</button>
+                </div>
+                <svg class="wires-svg" viewBox="0 0 700 250">
+                    <path d="M 80,145 L 250,145" class="wire wire-p" />
+                    <path d="M 250,95 L 250,195 L 360,145 Z" class="gate-body" />
+                    <circle cx="370" cy="145" r="10" class="gate-body" fill="none" />
+                    <path d="M 380,145 L 590,145" class="wire wire-out" />
+                </svg>
+                <div class="output"><div class="lamp"></div></div>
+            </div>
+        </div>
+        <button class="btn-back" onclick="goTo('home')">⬅ Voltar ao Início</button>
+    </div>
+
+    <footer>
+        Criado pelo professor Jeiverson Christian &copy; 2025
+    </footer>
+
+    <script>
+        function goTo(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            
+            // Reseta botões
+            document.querySelectorAll('.switch').forEach(btn => {
+                btn.classList.remove('on');
+            });
+            updateAllCircuits();
+            window.scrollTo(0,0); // Rola para o topo no celular
+        }
+
+        function toggleSwitch(element) {
+            element.classList.toggle('on');
+            updateAllCircuits();
+        }
+
+        function updateAllCircuits() {
+            document.querySelectorAll('.circuit-board').forEach(board => {
+                const logicType = board.getAttribute('data-logic');
+                const switches = board.querySelectorAll('.switch');
+                const lamp = board.querySelector('.lamp');
+                
+                let p = switches[0].classList.contains('on');
+                let q = switches.length > 1 ? switches[1].classList.contains('on') : false;
+
+                // Atualiza cor dos fios
+                const wireP = board.querySelector('.wire-p');
+                const wireQ = board.querySelector('.wire-q');
+                const wireOut = board.querySelector('.wire-out');
+
+                if(wireP) wireP.classList.toggle('active', p);
+                if(wireQ) wireQ.classList.toggle('active', q);
+
+                let result = false;
+
+                switch(logicType) {
+                    case 'AND': result = p && q; break;
+                    case 'OR':  result = p || q; break;
+                    case 'XOR': result = (p && !q) || (!p && q); break; 
+                    case 'COND': result = !p || q; break; 
+                    case 'BICOND': result = p === q; break; 
+                    case 'NOT': result = !p; break;
+                }
+
+                if (result) {
+                    lamp.classList.add('on');
+                    if(wireOut) wireOut.classList.add('active');
+                } else {
+                    lamp.classList.remove('on');
+                    if(wireOut) wireOut.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
